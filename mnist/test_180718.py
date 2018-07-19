@@ -23,9 +23,10 @@ sess = tf.Session()
 init = tf.global_variables_initializer()
 sess.run(init)
 for i in range(2000):
-    batch = mnist.train.next_batch(50)
     if i % 20 == 0:
+        batch = mnist.test.next_batch(50)
         train_accuacy, loss = sess.run([accuracy, lose_cross_entropy], feed_dict={in_data: batch[0], y_lable: batch[1]})
         print("step %d, training accuracy %g" % (i, train_accuacy))
         print(loss)
+    batch = mnist.train.next_batch(50)
     sess.run(train_step, feed_dict={in_data: batch[0], y_lable: batch[1]})
