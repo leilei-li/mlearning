@@ -29,7 +29,7 @@ plt.show()
 for i in range(10000):
     # w_, b_, loss_, train_step_ = sess.run([w, b, loss, train_step], feed_dict={x: x_in, y_lable: y_in})
     loss_, train_step_ = sess.run([loss, train_step], feed_dict={x: x_in, y_lable: y_in})
-    if i % 50 == 0:
+    if i % 3 == 0:
         try:
             ax.lines.remove(lines[0])
         except Exception:
