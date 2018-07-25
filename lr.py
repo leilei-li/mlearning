@@ -38,6 +38,6 @@ for i in range(10000):
         print(i, loss_, train_step_)
         fc2_ = sess.run(fc2, feed_dict={x: x_in, y_lable: y_in})
         lines = ax.plot(x_in, fc2_, 'r-', lw=5)
-        plt.pause(1)
+        plt.pause(0.5)
 
 sess.close()
