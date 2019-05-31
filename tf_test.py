@@ -53,6 +53,21 @@ def mnist_net(input_shape):
     return model
 
 
+def mnist_cnn_net(input_shape):
+    model = keras.Sequential()
+    model.add(keras.layers.Conv2D(filters=32, kernel_size=5, padding='same', data_format='channels_last',
+                                  activation=keras.activations.relu, input_shape=input_shape, name='conv1'))
+    model.add(keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    model.add(keras.layers.Conv2D(filters=64, kernel_size=3, padding='same', data_format='channels_last',
+                                  activation=keras.activations.relu, input_shape=input_shape, name='conv2'))
+    model.add(keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    model.add(keras.layers.Dropout(rate=0.5))
+    model.add(keras.layers.Flatten())
+    model.add(keras.layers.Dense(units=128, activation=keras.activations.relu, name='full_connection_layer'))
+    model.add(keras.layers.Dense(units=10, activation=keras.activations.softmax, name='output_layer'))
+    return model
+
+
 def trian_model(train_images, train_labels, test_images, test_labels):
     #  re-scale to 0~1.0之间
     train_images = train_images / 255.0
@@ -67,7 +82,7 @@ def trian_model(train_images, train_labels, test_images, test_labels):
     test_labels = one_hot(test_labels)
 
     # 建立模型
-    # model = mnist_net(input_shape=(28,28))
+    # model = mnist_cnn_net(input_shape=(28, 28, 1))
     model = mnist_net(input_shape=(28, 28, 1))
     optimizer = keras.optimizers.Adam()
     model.compile(optimizer=optimizer,
@@ -75,7 +90,7 @@ def trian_model(train_images, train_labels, test_images, test_labels):
                   metrics=[keras.metrics.mse,
                            keras.metrics.categorical_accuracy])
     history = LossHistory()
-    model.fit(x=train_images, y=train_labels, epochs=5, batch_size=50, callbacks=[history])
+    model.fit(x=train_images, y=train_labels, epochs=1, batch_size=50, callbacks=[history])
     print(history)
 
     test_result = model.evaluate(x=test_images, y=test_labels)
@@ -98,8 +113,12 @@ def trian_model(train_images, train_labels, test_images, test_labels):
 
 def draw_picture(history):
     x = np.array([i for i in range(len(history.batch))])
-    y = np.array(history.losses)
-    plt.plot(x, y)
+    y = np.array(history.accuracy)
+    loss = np.array(history.losses)
+    l1, = plt.plot(x, y)
+    l2, = plt.plot(x, loss)
+    plt.legend([l1, l2], ['accuracy', 'loss'])
+    plt.grid(True)
     plt.show()
 
 

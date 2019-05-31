@@ -6,10 +6,12 @@ class NpTest:
         pass
 
     def test(self):
-        x = np.array([1, 2, 3, 4])
-        print(np.mean(x), np.std(x))
-        x_bn = (x - np.mean(x)) / np.std(x)
-        print(x_bn)
+        A = [1, 1, 1, -1]
+        A = np.array(A)
+        A = A.reshape([2, 2])
+        A_T = A.T
+        b = np.array([0, 2]).reshape([-1,1])
+        print(np.linalg.inv(np.dot(A_T, A)).dot(A_T).dot(b))
 
 
 if __name__ == '__main__':
